@@ -58,7 +58,8 @@ func New(node string) (*Klocksmith, error) {
 // node.
 func (k *Klocksmith) updateStatusCallback(s updateengine.Status) {
 	glog.Info("Updating status")
-	// update our status
+	// In order to ensure we're making a valid annotation, we need to get/update,
+	// not set, our annotations.
 	anno := map[string]string{
 		constants.AnnotationStatus:          s.CurrentOperation,
 		constants.AnnotationLastCheckedTime: fmt.Sprintf("%d", s.LastCheckedTime),
