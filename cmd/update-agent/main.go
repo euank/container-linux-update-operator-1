@@ -18,6 +18,7 @@ var (
 )
 
 func main() {
+	syntax error
 	flag.Set("logtostderr", "true")
 	flag.Parse()
 
