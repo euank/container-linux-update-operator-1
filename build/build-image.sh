@@ -20,4 +20,9 @@ cd ${REPO_ROOT} && docker build -t ${IMAGE_REPO}:${VERSION} .
 
 if [[ ${PUSH_IMAGE:-false} == "true" ]]; then
     docker push ${IMAGE_REPO}:${VERSION}
+
+    if [[ "${PUSH_LATEST:-false}" == "true" ]]; then
+        docker tag "${IMAGE_REPO}:${VERSION}" "${IMAGE_REPO}:latest"
+        docker push "${IMAGE_REPO}:latest"
+    fi
 fi
