@@ -7,6 +7,9 @@ properties([
         string(name: 'TAG',
                defaultValue: 'v0.0.0',
                description: 'CLUO tag to release'),
+        booleanParam(name: "PUSH_LATEST",
+                     defaultValue: true,
+                     description: "Whether to also push a latest tag"),
     ])
 ])
 
@@ -27,7 +30,7 @@ node('docker') {
 
     stage('build') {
         withCredentials([usernamePassword(credentialsId: 'quay-update-operator', passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
-            withEnv(["TAG=${params.TAG}"]) {
+            withEnv(["TAG=${params.TAG}", "PUSH_LATEST=${params.PUSH_LATEST}"]) {
                 sh '''#!/bin/bash -ex
                     # isolate the docker credentials to the workspace for easy cleanup
                     export HOME="${WORKSPACE}"
@@ -37,6 +40,7 @@ node('docker') {
 
                     VERSION=${TAG} \
                         PUSH_IMAGE=true \
+                        PUSH_LATEST="${PUSH_LATEST}" \
                         ./build/build-image.sh
                 '''
             }
